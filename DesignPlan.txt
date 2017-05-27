@@ -1,0 +1,26 @@
+1. The first thing is an Object called "Data". In it, there are several attributes that dictate the program. The first
+one listed is "gameActive". "gameActive" is set to true as long as the player doesn't guess incorrectly. When
+"gameActive" is set to false, the game stops. Second is "round". "round" does two things; first, it is incremented by
+1 every time the player progress in each round. And secondly, at the beginning of loading each new screen, it is
+ multiplied by 5 which then becomes the new number for "facesOnScreen". "facesOnScreen" is used by function to generate
+  the desired number of smiley faces on screen for each consecutive round.
+
+2. We then have two functions. One is generateRandomPosition(), which is used to generate the position each face occupies
+on screen. Then we have generateCorrectNumber() which generates a random number based the number in Data.facesOnScreen.
+
+3. The third is an Object aptly names LinkedList. In the code, LinkedList is empty. However, in the next line of code,
+we have populateLinkedList(). The function creates a linked list of objects based on the number of Data.facesOnScreen.
+Each node in the list is given an attribute called "numberId" which is the index in the while loop that generates the
+LinkedList. Each Node is given an attribute called "isCorrect" which are all set to Boolean false at first. And each are
+given two attributes that determines positioning; one called "LeftRight" and the other is called "top", both are
+generated generateRandomPosition().
+
+4. Then after that we must immediatley run a function called assignCorrect(). This goes through LinkedList that was just
+populated and takes the generateCorrectNumber, and changes the "isCorrect" attribute to true of the object whose numberId
+is the same as the product of generateCorrectNumber.
+
+(It may be better to just incorporate assignCorrect into populateLinkedList())
+
+....So I think when you do the DOM thing, you should first get all the faces that have "isCorrect: false" first, then
+have a function that puts the one with "isCorrect: true". This is so that the one the player has to click isn't buried
+beneath all the other ones.

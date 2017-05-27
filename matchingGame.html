@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script>
+    </script>
+    <style>
+
+        img {
+            position: absolute;
+        }
+
+        div{
+            position: absolute;
+            width: 500px;
+            height: 500px;
+        }
+
+        #rightSide {
+            left: 500px;
+            border-left: 1px solid black;
+        }
+    </style>
+    <script>
+
+        var Data = {
+            gameActive: true,
+            round: 0,
+            facesOnScreen: 5,
+            score: 0
+        };
+
+
+        function generateFaces() {
+
+
+            function generateRandomPosition() {
+                return Math.floor(Math.random() * 400);
+            }
+
+            function generateRandomCorrect() {
+                return Math.floor(Math.random() * Data.facesOnScreen);
+            }
+
+            var FacesData = {};
+
+
+            function populateList() {
+
+
+                    var counter = 1;
+
+                    while (counter < Data.facesOnScreen + 1) {
+                        FacesData[counter] = {};
+                        FacesData[counter]['numberId'] = counter;
+                        var p1 = generateRandomPosition();
+                        var p2 = generateRandomPosition();
+                        FacesData[counter]['leftRight'] = p1;
+                        FacesData[counter]['top'] = p2;
+                        FacesData[counter]['isCorrect'] = false;
+                        counter++
+                    }
+                }
+
+
+                function assignCorrect() {
+
+
+                    function isThereACorrect() {
+
+                        isThere = false;
+
+                        for (var i = 1; i < Data.facesOnScreen + 1; i++) {
+                            if (FacesData[i]['isCorrect'] !== false) {
+
+                                isThere = true;
+
+                            }
+                        }
+
+                        return isThere;
+
+                    }
+
+                    function assigning() {
+
+
+                        var correct = generateRandomCorrect();
+
+                        var counter = 1;
+
+                        while (counter < Data.facesOnScreen + 1) {
+
+                            if (FacesData[counter]['numberId'] === correct) {
+                                FacesData[counter]['isCorrect'] = true;
+                            }
+
+                            counter++;
+
+                        }
+
+
+                    }
+
+                    while (isThereACorrect() !== true) {
+                        assigning();
+                    }
+
+                }
+            
+
+            function displayFaces() {
+
+
+                var theRightSide = document.getElementById('rightSide');
+
+                var theLeftSide = document.getElementById('leftSide');
+
+
+                function createImage(topPosition, leftRightPosition, side, answer) {
+
+                    var img = document.createElement('img');
+
+                    img.src = "smile.png";
+
+                    img.style.right = (String(leftRightPosition) + 'px');
+
+                    img.style.top = (String(topPosition) + 'px');
+
+                    img.name = answer;
+
+                    side.appendChild(img);
+
+                }
+
+                function displayLeft1() {
+
+                    var counter = 1;
+
+                    while (counter < Data.facesOnScreen + 1) {
+
+                            var theAnswer = FacesData[counter]['isCorrect'];
+
+                            if (theAnswer === false) {
+
+
+                                var topP = FacesData[counter]['top'];
+
+                                var rightP = FacesData[counter]['leftRight'];
+
+
+                                createImage(topP, rightP, theLeftSide, theAnswer);
+                            }
+
+                            counter++
+                        }
+
+
+                    }
+
+                    function displayRight(){
+
+                        var leftSideImages = theLeftSide.cloneNode(true);
+
+                        theRightSide.appendChild(leftSideImages);
+                    }
+
+                function displayLeft2() {
+
+                    var counter = 1;
+
+                    while (counter < Data.facesOnScreen + 1) {
+
+                        var theAnswer = FacesData[counter]['isCorrect'];
+
+                        if (theAnswer === true) {
+
+                            var topP = FacesData[counter]['top'];
+
+                            var rightP = FacesData[counter]['leftRight'];
+
+                            createImage(topP, rightP, theLeftSide, theAnswer);
+                        }
+
+                        counter++
+                    }
+
+
+                }
+
+
+                    displayLeft1();
+
+                    displayRight();
+
+                    displayLeft2();
+
+                }
+
+                populateList();
+
+                assignCorrect();
+
+                displayFaces();
+
+
+            var theBody = document.getElementsByTagName("body")[0];
+
+            var correctAnswer = document.getElementsByName('true')[0];
+
+            function clearField() {
+
+
+                function deleteNodes(branch) {
+
+                    var removeFrom = document.getElementById(branch);
+
+                    while (removeFrom.hasChildNodes()){
+                        removeFrom.removeChild(removeFrom.lastChild);
+                    }
+
+                }
+
+                deleteNodes("leftSide");
+
+                deleteNodes("rightSide");
+
+            }
+
+
+                correctAnswer.onclick = function nextLevel(event) {
+
+                    event.stopPropagation();
+
+                    Data.round += 1;
+
+                    Data.score += 1;
+
+                    Data.facesOnScreen += 5;
+
+                    clearField();
+
+                    generateFaces();
+
+                    /*
+
+                    populateList();
+
+                    assignCorrect();
+
+                    displayFaces();
+
+                    nextLevel();
+
+                    */
+
+                };
+
+                theBody.onclick = function gameOver() {
+
+                    Data.gameActive = false;
+
+                    alert('Game Over \n \n' + 'Your score is ' + String(Data.score) + '. And you managed to make it through ' + String(Data.round) + ' rounds!');
+
+                    theBody.onclick = null;
+
+                    correctAnswer.onclick = null;
+
+                }
+
+
+            }
+
+
+
+
+
+
+    </script>
+</head>
+<body onload="generateFaces()">
+<h2>Matching Game</h2>
+<p>Click on the extra smiling face on the left.</p>
+<div id="leftSide"></div>
+<div id="rightSide"></div>
+
+</body>
+</html>
